@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  bff:
+    build: ./bff
+    container_name: bff
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=production
+      - JWT_SECRET=your-jwt-secret
+      - KEYCLOAK_URL=http://keycloak:8080/auth
+    networks:
+      - iotdevices_network
+
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - '82:80'
+    environment:
+      - NODE_ENV=production
+    networks:
+      - iotdevices_network
+    depends_on:
+      - bff
+
+networks:
+  iotdevices_network:
+    external: true
